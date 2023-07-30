@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveObstacles : MonoBehaviour
+public class MoveObject : MonoBehaviour
 {
     [SerializeField] private List<Transform> points;
     [SerializeField] private float moveSpeed;
