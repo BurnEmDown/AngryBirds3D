@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,18 +12,34 @@ using UnityEngine.SceneManagement;
 
 public class Projection : MonoBehaviour
 {
-    private Scene simulationScene;
-    private PhysicsScene physicsScene;
-
     [SerializeField] private Transform obstaclesParent;
     [SerializeField] private LineRenderer line;
     [SerializeField] private int maxPhysicsFrameIterations;
+    
+    private Scene simulationScene;
+    private PhysicsScene physicsScene;
+    
+    private Dictionary<Transform, Transform> spawnedObjects = new Dictionary<Transform, Transform>();
 
     private void Start()
     {
         CreatePhysicsScene();
     }
-    
+
+    private void Update()
+    {
+        UpdateObstaclesTransform();
+    }
+
+    private void UpdateObstaclesTransform()
+    {
+        foreach (var item in spawnedObjects)
+        {
+            item.Value.position = item.Key.position;
+            item.Value.rotation = item.Key.rotation;
+        }
+    }
+
     private void CreatePhysicsScene()
     {
         simulationScene =
@@ -31,7 +48,9 @@ public class Projection : MonoBehaviour
 
         foreach (Transform obj in obstaclesParent)
         {
-            CreateGhostObjectInSimulationScene(obj, true);
+            var ghostObject = CreateGhostObjectInSimulationScene(obj, true);
+            if(!ghostObject.isStatic)
+                spawnedObjects.Add(obj, ghostObject.transform);
         }
         
     }
