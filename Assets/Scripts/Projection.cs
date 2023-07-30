@@ -15,6 +15,8 @@ public class Projection : MonoBehaviour
     private PhysicsScene physicsScene;
 
     [SerializeField] private Transform obstaclesParent;
+    [SerializeField] private LineRenderer line;
+    [SerializeField] private int maxPhysicsFrameIterations;
 
     private void Start()
     {
@@ -29,12 +31,40 @@ public class Projection : MonoBehaviour
 
         foreach (Transform obj in obstaclesParent)
         {
-            var ghostObj = Instantiate(obj.gameObject, obj.position, obj.rotation);
-            ghostObj.GetComponent<Renderer>().enabled = false;
-            SceneManager.MoveGameObjectToScene(ghostObj, simulationScene);
+            CreateGhostObjectInSimulationScene(obj, true);
         }
         
     }
 
+    public void SimulateTrajectory(Ball ballPrefab, Vector3 pos, Vector3 velocity)
+    {
+        var ghostBall = CreateGhostObjectInSimulationScene(ballPrefab.transform, pos, false);
+        
+        ghostBall.GetComponent<Ball>().Init(velocity, true);
 
+        line.positionCount = maxPhysicsFrameIterations;
+
+        for (int i = 0; i < maxPhysicsFrameIterations; i++)
+        {
+            physicsScene.Simulate(Time.fixedDeltaTime);
+            line.SetPosition(i, ghostBall.transform.position);
+        }
+        
+        Destroy(ghostBall);
+    }
+    
+    private GameObject CreateGhostObjectInSimulationScene(Transform obj, bool isObjectPersistent)
+    {
+        return CreateGhostObjectInSimulationScene(obj, obj.position, isObjectPersistent);
+    }
+
+    private GameObject CreateGhostObjectInSimulationScene(Transform obj, Vector3 pos, bool isObjectPersistent)
+    {
+        var ghostObj = Instantiate(obj.gameObject, pos, obj.rotation);
+        if(isObjectPersistent)
+            ghostObj.GetComponent<Renderer>().enabled = false;
+        SceneManager.MoveGameObjectToScene(ghostObj, simulationScene);
+
+        return ghostObj;
+    }
 }

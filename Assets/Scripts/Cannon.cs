@@ -12,7 +12,7 @@ public class Cannon : MonoBehaviour {
 
     private void Update() {
         HandleControls();
-        //_projection.SimulateTrajectory(_ballPrefab, _ballSpawn.position, _ballSpawn.forward * _force);
+        _projection.SimulateTrajectory(_ballPrefab, _ballSpawn.position, _ballSpawn.forward * _force);
     }
 
     #region Handle Controls
