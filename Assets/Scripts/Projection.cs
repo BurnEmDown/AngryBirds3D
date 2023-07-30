@@ -52,7 +52,6 @@ public class Projection : MonoBehaviour
             if(!ghostObject.isStatic)
                 spawnedObjects.Add(obj, ghostObject.transform);
         }
-        
     }
 
     public void SimulateTrajectory(Ball ballPrefab, Vector3 pos, Vector3 velocity)
