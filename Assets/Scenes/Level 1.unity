@@ -785,6 +785,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cannon
       objectReference: {fileID: 0}
+    - target: {fileID: 4913399676012972038, guid: 3e384136af865514eab6782172bf9b73, type: 3}
+      propertyPath: maxVerticaRotation
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 7971865390746571877, guid: 3e384136af865514eab6782172bf9b73, type: 3}
       propertyPath: m_RootOrder
       value: 4
