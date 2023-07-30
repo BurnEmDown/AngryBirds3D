@@ -22,7 +22,27 @@ public class Ball : MonoBehaviour {
     public void OnCollisionEnter(Collision col) {
         if (_isGhost) return;
         Instantiate(_poofPrefab, col.contacts[0].point, Quaternion.Euler(col.contacts[0].normal));
-        _source.clip = _clips[Random.Range(0, _clips.Length)];
-        _source.Play();
+
+        // miss
+        if (col.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            Debug.Log("miss");
+            GameManager.Instance.OnShotMiss();
+            Destroy(gameObject);
+        }
+        // hit enemy
+        else if (col.gameObject.GetComponent<Target>())
+        {
+            col.gameObject.GetComponent<Target>().OnCannonHit();
+            Destroy(gameObject);
+        }
+        // hit obstacle
+        else
+        {
+            _source.clip = _clips[Random.Range(0, _clips.Length)];
+            _source.Play();
+        }
+        
+        
     }
 }
