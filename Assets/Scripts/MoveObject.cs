@@ -5,21 +5,34 @@ using UnityEngine;
 
 public class MoveObject : MonoBehaviour
 {
-    [SerializeField] private List<Transform> points;
+    [SerializeField] private Transform movePointsParent;
     [SerializeField] private float moveSpeed;
     
+    private List<Transform> movePoints;
     private Transform currentDestination;
-    private int currentDestinationIndex;
+    [SerializeField] private int currentDestinationIndex;
+    private bool isMoving = true;
 
     private void Start()
     {
-        currentDestinationIndex = 0;
-        currentDestination = points[currentDestinationIndex];
+        SetMovePointsFromParent();
+        currentDestination = movePoints[currentDestinationIndex];
     }
 
     private void Update()
     {
-        MoveToTarget();
+        if(isMoving)
+            MoveToTarget();
+    }
+
+    private void SetMovePointsFromParent()
+    {
+        movePoints = new List<Transform>();
+        
+        foreach (Transform movePoint in movePointsParent)
+        {
+            movePoints.Add(movePoint);            
+        }
     }
 
     private void MoveToTarget()
@@ -28,11 +41,20 @@ public class MoveObject : MonoBehaviour
         if (transform.position == currentDestination.position)
         {
             currentDestinationIndex++;
-            if (currentDestinationIndex == points.Count)
+            if (currentDestinationIndex == movePoints.Count)
                 currentDestinationIndex = 0;
             
-            currentDestination = points[currentDestinationIndex];
+            currentDestination = movePoints[currentDestinationIndex];
         }
-            
+    }
+
+    public void StopMoving()
+    {
+        isMoving = false;
+    }
+
+    public void SetMoveIndex(int index)
+    {
+        currentDestinationIndex = index;
     }
 }
